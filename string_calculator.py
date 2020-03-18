@@ -1,12 +1,21 @@
 # string calculator field
 # James Rine
-from re import match
+from re import finditer
 
+
+def get_nums(comma_delimited_numbers):
+    match_iter = finditer(r'(?P<num>\d+),?', comma_delimited_numbers)
+    nums = []
+    while True:
+        try:
+            num_match = next(match_iter)
+            nums.append(int(num_match.group('num')))
+        except StopIteration:
+            break
+    return nums
 
 def add(comma_delimited_numbers):
     if not comma_delimited_numbers:
         return 0
-    num_list_match = match(r'(?P<first_num>\d+)(,(?P<second_num>\d+))?', comma_delimited_numbers)
-    if not num_list_match.group('second_num'):
-        return int(num_list_match.group('first_num'))
-    return int(num_list_match.group('first_num')) + int(num_list_match.group('second_num'))
+    nums = get_nums(comma_delimited_numbers)
+    return sum(nums)
